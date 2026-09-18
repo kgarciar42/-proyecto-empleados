@@ -1,0 +1,15 @@
+
+target/
+
+*.class
+
+.settings/
+
+.classpath
+
+.project
+
+.metadata/
+
+*.log
+
