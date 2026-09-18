@@ -1,5 +1,15 @@
-package edu.umg.programacion2.proyecto.ui;
+package edu.umg.programacion2.proyecto;
 
-public class EmpleadosTableModel {
+import edu.umg.programacion2.proyecto.ui.VentanaPrincipal;
 
+import javax.swing.SwingUtilities;
+
+public class MainUI {
+
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(() -> {
+            VentanaPrincipal ventana = new VentanaPrincipal();
+            ventana.setVisible(true);
+        });
+    }
 }
