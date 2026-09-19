@@ -11,27 +11,30 @@ public class Empleado {
     private BigDecimal salario;
     private LocalDate fechaContratacion;
     private boolean activo;
+    private int aniosExperiencia;
 
     public Empleado() {
     }
     //commit de prueba
     public Empleado(String nombre, String departamento, BigDecimal salario,
-                     LocalDate fechaContratacion, boolean activo) {
+                     LocalDate fechaContratacion, boolean activo, int aniosExperiencia) {
         this.nombre = nombre;
         this.departamento = departamento;
         this.salario = salario;
         this.fechaContratacion = fechaContratacion;
         this.activo = activo;
+        this.aniosExperiencia = aniosExperiencia;
     }
 
     public Empleado(int id, String nombre, String departamento, BigDecimal salario,
-                     LocalDate fechaContratacion, boolean activo) {
+                     LocalDate fechaContratacion, boolean activo, int aniosExperiencia) {
         this.id = id;
         this.nombre = nombre;
         this.departamento = departamento;
         this.salario = salario;
         this.fechaContratacion = fechaContratacion;
         this.activo = activo;
+        this.aniosExperiencia = aniosExperiencia;
     }
 
     public int getId() { return id; }
@@ -51,10 +54,14 @@ public class Empleado {
 
     public boolean isActivo() { return activo; }
     public void setActivo(boolean activo) { this.activo = activo; }
+    
+    public int getAniosExperiencia() { return aniosExperiencia; }
+    public void setAniosExperiencia(int aniosExperiencia) { this.aniosExperiencia = aniosExperiencia; }
+
 
     @Override
     public String toString() {
         return "Empleado{id=" + id + ", nombre='" + nombre + "', departamento='" + departamento +
-                "', salario=" + salario + ", fechaContratacion=" + fechaContratacion + ", activo=" + activo + '}';
+                "', salario=" + salario + ", fechaContratacion=" + fechaContratacion + ", activo=" + activo + ", aniosExperiencia=" + aniosExperiencia + '}';
     }
 }
