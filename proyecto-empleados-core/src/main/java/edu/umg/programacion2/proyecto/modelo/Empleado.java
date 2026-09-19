@@ -14,7 +14,7 @@ public class Empleado {
 
     public Empleado() {
     }
-
+    //commit de prueba
     public Empleado(String nombre, String departamento, BigDecimal salario,
                      LocalDate fechaContratacion, boolean activo) {
         this.nombre = nombre;
