@@ -30,6 +30,7 @@ public class VentanaPrincipal extends JFrame {
     private final JTextField txtDepartamento = new JTextField(15);
     private final JTextField txtSalario = new JTextField(10);
     private final JTextField txtFecha = new JTextField(10);
+    private final JTextField txtAniosExperiencia = new JTextField(5);
     private final JCheckBox chkActivo = new JCheckBox("Activo", true);
 
     private final JButton btnNuevo = new JButton("Nuevo");
@@ -135,6 +136,7 @@ public class VentanaPrincipal extends JFrame {
         agregarCampo(panelCampos, gbc, 2, 0, "Departamento:", txtDepartamento);
         agregarCampo(panelCampos, gbc, 0, 1, "Salario mensual:", txtSalario);
         agregarCampo(panelCampos, gbc, 2, 1, "Fecha contratación (yyyy-MM-dd):", txtFecha);
+        agregarCampo(panelCampos, gbc, 0, 2, "Años de experiencia:", txtAniosExperiencia);
 
         gbc.gridx = 4;
         gbc.gridy = 0;
@@ -192,6 +194,7 @@ public class VentanaPrincipal extends JFrame {
         txtSalario.setText(empleadoSeleccionado.getSalario().toPlainString());
         txtFecha.setText(empleadoSeleccionado.getFechaContratacion().format(FORMATO_FECHA));
         chkActivo.setSelected(empleadoSeleccionado.isActivo());
+        txtAniosExperiencia.setText(String.valueOf(empleadoSeleccionado.getAniosExperiencia()));
     }
 
     private void onNuevo(ActionEvent e) {
@@ -285,8 +288,19 @@ public class VentanaPrincipal extends JFrame {
         if (fecha.isAfter(LocalDate.now())) {
             throw new ValidacionException("La fecha de contratación no puede ser una fecha futura.");
         }
+        
+        String experienciaTexto = txtAniosExperiencia.getText().trim();
+        int aniosExperiencia;
+        try {
+            aniosExperiencia = Integer.parseInt(experienciaTexto);
+        } catch (NumberFormatException ex) {
+            throw new ValidacionException("Los años de experiencia deben ser un número entero.");
+        }
+        if (aniosExperiencia < 0 || aniosExperiencia > 50) {
+            throw new ValidacionException("Los años de experiencia deben estar entre 0 y 50.");
+        }
 
-        return new Empleado(nombre, departamento, salario, fecha, chkActivo.isSelected());
+        return new Empleado(nombre, departamento, salario, fecha, chkActivo.isSelected(), aniosExperiencia);
     }
 
     private void limpiarFormulario() {
@@ -295,6 +309,7 @@ public class VentanaPrincipal extends JFrame {
         txtSalario.setText("");
         txtFecha.setText("");
         chkActivo.setSelected(true);
+        txtAniosExperiencia.setText("");
     }
 
     private void mostrarError(String mensajeAmigable, SQLException ex) {
