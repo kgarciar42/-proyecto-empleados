@@ -4,6 +4,8 @@ import edu.umg.programacion2.proyecto.dao.EmpleadoDAO;
 import edu.umg.programacion2.proyecto.modelo.Empleado;
 
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
+import javax.swing.table.DefaultTableCellRenderer;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.math.BigDecimal;
@@ -16,6 +18,9 @@ import java.util.List;
 public class VentanaPrincipal extends JFrame {
 
     private static final DateTimeFormatter FORMATO_FECHA = DateTimeFormatter.ISO_LOCAL_DATE;
+    private static final Color COLOR_FILA_PAR = new Color(245, 247, 250);
+    private static final Color COLOR_FILA_IMPAR = Color.WHITE;
+    private static final Color COLOR_ELIMINAR = new Color(214, 69, 65);
 
     private final EmpleadoDAO empleadoDAO = new EmpleadoDAO();
     private final EmpleadosTableModel tableModel = new EmpleadosTableModel();
@@ -42,18 +47,17 @@ public class VentanaPrincipal extends JFrame {
 
     private void construirInterfaz() {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(800, 500);
+        setSize(900, 560);
         setLocationRelativeTo(null);
-        setLayout(new BorderLayout(10, 10));
+        setLayout(new BorderLayout(0, 12));
 
-        tabla.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        tabla.getSelectionModel().addListSelectionListener(e -> {
-            if (!e.getValueIsAdjusting()) {
-                cargarSeleccionEnFormulario();
-            }
-        });
-        add(new JScrollPane(tabla), BorderLayout.CENTER);
-        add(construirPanelFormulario(), BorderLayout.SOUTH);
+        JPanel panelRaiz = new JPanel(new BorderLayout(0, 12));
+        panelRaiz.setBorder(new EmptyBorder(16, 16, 16, 16));
+        setContentPane(panelRaiz);
+
+        panelRaiz.add(construirTitulo(), BorderLayout.NORTH);
+        panelRaiz.add(construirPanelTabla(), BorderLayout.CENTER);
+        panelRaiz.add(construirPanelFormulario(), BorderLayout.SOUTH);
 
         btnNuevo.addActionListener(this::onNuevo);
         btnGuardar.addActionListener(this::onGuardar);
@@ -61,24 +65,91 @@ public class VentanaPrincipal extends JFrame {
         btnRefrescar.addActionListener(e -> cargarEmpleados());
     }
 
+    private JLabel construirTitulo() {
+        JLabel titulo = new JLabel("Gestión de Empleados");
+        titulo.setFont(titulo.getFont().deriveFont(Font.BOLD, 22f));
+        titulo.setBorder(new EmptyBorder(0, 4, 8, 0));
+        return titulo;
+    }
+
+    private JScrollPane construirPanelTabla() {
+        tabla.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        tabla.setRowHeight(28);
+        tabla.setShowGrid(false);
+        tabla.setIntercellSpacing(new Dimension(0, 0));
+        tabla.setFont(tabla.getFont().deriveFont(14f));
+        tabla.getTableHeader().setFont(tabla.getFont().deriveFont(Font.BOLD, 14f));
+        tabla.getTableHeader().setPreferredSize(new Dimension(0, 34));
+
+        DefaultTableCellRenderer renderer = new DefaultTableCellRenderer() {
+            @Override
+            public Component getTableCellRendererComponent(JTable table, Object value,
+                    boolean isSelected, boolean hasFocus, int row, int column) {
+                Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+                if (!isSelected) {
+                    c.setBackground(row % 2 == 0 ? COLOR_FILA_PAR : COLOR_FILA_IMPAR);
+                }
+                return c;
+            }
+        };
+        renderer.setHorizontalAlignment(SwingConstants.CENTER);
+        tabla.getColumnModel().getColumn(0).setCellRenderer(renderer); // ID
+        tabla.getColumnModel().getColumn(5).setCellRenderer(renderer); // Activo
+
+        DefaultTableCellRenderer rendererIzquierda = new DefaultTableCellRenderer() {
+            @Override
+            public Component getTableCellRendererComponent(JTable table, Object value,
+                    boolean isSelected, boolean hasFocus, int row, int column) {
+                Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+                if (!isSelected) {
+                    c.setBackground(row % 2 == 0 ? COLOR_FILA_PAR : COLOR_FILA_IMPAR);
+                }
+                return c;
+            }
+        };
+        tabla.getColumnModel().getColumn(1).setCellRenderer(rendererIzquierda); // Nombre
+        tabla.getColumnModel().getColumn(2).setCellRenderer(rendererIzquierda); // Departamento
+        tabla.getColumnModel().getColumn(3).setCellRenderer(rendererIzquierda); // Salario
+        tabla.getColumnModel().getColumn(4).setCellRenderer(rendererIzquierda); // Fecha
+
+        tabla.getSelectionModel().addListSelectionListener(e -> {
+            if (!e.getValueIsAdjusting()) {
+                cargarSeleccionEnFormulario();
+            }
+        });
+
+        JScrollPane scroll = new JScrollPane(tabla);
+        scroll.setBorder(BorderFactory.createLineBorder(new Color(220, 223, 228)));
+        return scroll;
+    }
+
     private JPanel construirPanelFormulario() {
-        JPanel panelCampos = new JPanel(new GridLayout(2, 4, 8, 8));
+        JPanel panelCampos = new JPanel(new GridBagLayout());
         panelCampos.setBorder(BorderFactory.createTitledBorder("Datos del empleado"));
 
-        panelCampos.add(new JLabel("Nombre completo:"));
-        panelCampos.add(txtNombre);
-        panelCampos.add(new JLabel("Departamento:"));
-        panelCampos.add(txtDepartamento);
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(6, 6, 6, 6);
+        gbc.fill = GridBagConstraints.HORIZONTAL;
 
-        panelCampos.add(new JLabel("Salario mensual:"));
-        panelCampos.add(txtSalario);
-        panelCampos.add(new JLabel("Fecha contratación (yyyy-MM-dd):"));
-        panelCampos.add(txtFecha);
+        agregarCampo(panelCampos, gbc, 0, 0, "Nombre completo:", txtNombre);
+        agregarCampo(panelCampos, gbc, 2, 0, "Departamento:", txtDepartamento);
+        agregarCampo(panelCampos, gbc, 0, 1, "Salario mensual:", txtSalario);
+        agregarCampo(panelCampos, gbc, 2, 1, "Fecha contratación (yyyy-MM-dd):", txtFecha);
 
-        JPanel panelActivo = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        panelActivo.add(chkActivo);
+        gbc.gridx = 4;
+        gbc.gridy = 0;
+        gbc.gridheight = 2;
+        panelCampos.add(chkActivo, gbc);
 
-        JPanel panelBotones = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        for (Component c : panelCampos.getComponents()) {
+            c.setFont(c.getFont().deriveFont(13f));
+        }
+
+        JPanel panelBotones = new JPanel(new FlowLayout(FlowLayout.RIGHT, 8, 8));
+        btnEliminar.setForeground(Color.WHITE);
+        btnEliminar.setBackground(COLOR_ELIMINAR);
+        btnEliminar.setOpaque(true);
+        btnEliminar.setBorderPainted(false);
         panelBotones.add(btnNuevo);
         panelBotones.add(btnGuardar);
         panelBotones.add(btnEliminar);
@@ -86,9 +157,21 @@ public class VentanaPrincipal extends JFrame {
 
         JPanel panelInferior = new JPanel(new BorderLayout());
         panelInferior.add(panelCampos, BorderLayout.CENTER);
-        panelInferior.add(panelActivo, BorderLayout.WEST);
         panelInferior.add(panelBotones, BorderLayout.SOUTH);
         return panelInferior;
+    }
+
+    private void agregarCampo(JPanel panel, GridBagConstraints gbc, int col, int fila, String etiqueta, JComponent campo) {
+        gbc.gridx = col;
+        gbc.gridy = fila;
+        gbc.weightx = 0;
+        JLabel label = new JLabel(etiqueta);
+        label.setFont(label.getFont().deriveFont(Font.BOLD));
+        panel.add(label, gbc);
+
+        gbc.gridx = col + 1;
+        gbc.weightx = 1;
+        panel.add(campo, gbc);
     }
 
     private void cargarEmpleados() {
