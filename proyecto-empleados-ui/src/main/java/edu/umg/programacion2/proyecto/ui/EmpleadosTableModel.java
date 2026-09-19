@@ -9,7 +9,7 @@ import java.util.List;
 public class EmpleadosTableModel extends AbstractTableModel {
 
     private static final String[] COLUMNAS = {
-            "ID", "Nombre", "Departamento", "Salario", "Fecha contratación", "Activo"
+            "ID", "Nombre", "Departamento", "Salario", "Fecha contratación", "Activo",  "Años experiencia"
     };
 
     private List<Empleado> empleados = new ArrayList<>();
@@ -42,6 +42,7 @@ public class EmpleadosTableModel extends AbstractTableModel {
             case 3: return "Q" + e.getSalario();
             case 4: return e.getFechaContratacion();
             case 5: return e.isActivo() ? "Activo" : "Inactivo";
+            case 6: return e.getAniosExperiencia();
             default: return null;
         }
     }
