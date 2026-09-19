@@ -17,7 +17,7 @@ public class EmpleadoDAO {
 
     private static final String SQL_INSERT ="INSERT INTO empleados (nombre, departamento, salario, fecha_contratacion, activo, anios_experiencia) " + "VALUES (?, ?, ?, ?, ?, ?)";
 
-    private static final String SQL_SELECT_ALL ="SELECT id, nombre, departamento, salario, fecha_contratacion, activo, anios_experiencia" + "FROM empleados ORDER BY id";
+    private static final String SQL_SELECT_ALL ="SELECT id, nombre, departamento, salario, fecha_contratacion, activo, anios_experiencia " + "FROM empleados ORDER BY id";
 
     private static final String SQL_SELECT_BY_ID ="SELECT id, nombre, departamento, salario, fecha_contratacion, activo, anios_experiencia " + "FROM empleados WHERE id = ?";
 

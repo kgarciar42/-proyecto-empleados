@@ -81,7 +81,7 @@ public class VentanaPrincipal extends JFrame {
         tabla.setFont(tabla.getFont().deriveFont(14f));
         tabla.getTableHeader().setFont(tabla.getFont().deriveFont(Font.BOLD, 14f));
         tabla.getTableHeader().setPreferredSize(new Dimension(0, 34));
-
+        
         DefaultTableCellRenderer renderer = new DefaultTableCellRenderer() {
             @Override
             public Component getTableCellRendererComponent(JTable table, Object value,
@@ -96,6 +96,7 @@ public class VentanaPrincipal extends JFrame {
         renderer.setHorizontalAlignment(SwingConstants.CENTER);
         tabla.getColumnModel().getColumn(0).setCellRenderer(renderer); // ID
         tabla.getColumnModel().getColumn(5).setCellRenderer(renderer); // Activo
+        tabla.getColumnModel().getColumn(6).setCellRenderer(renderer); // Años experiencia
 
         DefaultTableCellRenderer rendererIzquierda = new DefaultTableCellRenderer() {
             @Override
@@ -140,7 +141,7 @@ public class VentanaPrincipal extends JFrame {
 
         gbc.gridx = 4;
         gbc.gridy = 0;
-        gbc.gridheight = 2;
+        gbc.gridheight = 3;
         panelCampos.add(chkActivo, gbc);
 
         for (Component c : panelCampos.getComponents()) {
