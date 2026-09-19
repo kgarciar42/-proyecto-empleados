@@ -16,7 +16,6 @@ CREATE TABLE empleados (
     anios_experiencia   INT           NOT NULL DEFAULT 0,
 
     CONSTRAINT chk_salario_positivo   CHECK (salario > 0),
-    CONSTRAINT chk_fecha_no_futura    CHECK (fecha_contratacion <= CURDATE()),
     CONSTRAINT chk_experiencia_rango  CHECK (anios_experiencia BETWEEN 0 AND 50)
 );
 
