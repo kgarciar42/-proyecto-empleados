@@ -15,13 +15,13 @@ import java.util.Optional;
 
 public class EmpleadoDAO {
 
-    private static final String SQL_INSERT ="INSERT INTO empleados (nombre, departamento, salario, fecha_contratacion, activo) " + "VALUES (?, ?, ?, ?, ?)";
+    private static final String SQL_INSERT ="INSERT INTO empleados (nombre, departamento, salario, fecha_contratacion, activo, anios_experiencia) " + "VALUES (?, ?, ?, ?, ?, ?)";
 
-    private static final String SQL_SELECT_ALL ="SELECT id, nombre, departamento, salario, fecha_contratacion, activo " + "FROM empleados ORDER BY id";
+    private static final String SQL_SELECT_ALL ="SELECT id, nombre, departamento, salario, fecha_contratacion, activo, anios_experiencia" + "FROM empleados ORDER BY id";
 
-    private static final String SQL_SELECT_BY_ID ="SELECT id, nombre, departamento, salario, fecha_contratacion, activo " + "FROM empleados WHERE id = ?";
+    private static final String SQL_SELECT_BY_ID ="SELECT id, nombre, departamento, salario, fecha_contratacion, activo, anios_experiencia " + "FROM empleados WHERE id = ?";
 
-    private static final String SQL_UPDATE ="UPDATE empleados SET nombre = ?, departamento = ?, salario = ?, " + "fecha_contratacion = ?, activo = ? WHERE id = ?";
+    private static final String SQL_UPDATE ="UPDATE empleados SET nombre = ?, departamento = ?, salario = ?, " + "fecha_contratacion = ?, activo = ?, anios_experiencia = ? WHERE id = ?";
 
     private static final String SQL_DELETE ="DELETE FROM empleados WHERE id = ?";
 
@@ -34,6 +34,7 @@ public class EmpleadoDAO {
             ps.setBigDecimal(3, item.getSalario());
             ps.setDate(4, Date.valueOf(item.getFechaContratacion()));
             ps.setBoolean(5, item.isActivo());
+            ps.setInt(6, item.getAniosExperiencia());
 
             ps.executeUpdate();
 
@@ -84,7 +85,8 @@ public class EmpleadoDAO {
             ps.setBigDecimal(3, item.getSalario());
             ps.setDate(4, Date.valueOf(item.getFechaContratacion()));
             ps.setBoolean(5, item.isActivo());
-            ps.setInt(6, item.getId());
+            ps.setInt(6, item.getAniosExperiencia());
+            ps.setInt(7, item.getId());
 
             return ps.executeUpdate() > 0;
         }
@@ -106,7 +108,8 @@ public class EmpleadoDAO {
                 rs.getString("departamento"),
                 rs.getBigDecimal("salario"),
                 rs.getDate("fecha_contratacion").toLocalDate(),
-                rs.getBoolean("activo")
+                rs.getBoolean("activo"),
+                rs.getInt("anios_experiencia")
         );
     }
 }
